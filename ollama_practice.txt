@@ -19,6 +19,8 @@ response
 print(response['message']['content'])
 
 
+prompt = """how to print integers"""
+
 response = ollama.chat(
     model = "codeguru",
     messages =[
