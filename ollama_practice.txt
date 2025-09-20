@@ -10,7 +10,7 @@ response = ollama.chat(
             model = "codellama",
             messages = [
                  {"role":"user",
-                  "content":"prompt"}
+                  "content":prompt}
           ]
 )
 
@@ -22,7 +22,7 @@ print(response['message']['content'])
 response = ollama.chat(
     model = "codeguru",
     messages =[
-        {"role":"user","content":"prompt"}
+        {"role":"user","content":prompt}
     ],
 )
 
