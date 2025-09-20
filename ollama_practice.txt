@@ -1,0 +1,29 @@
+pip show ollama
+
+ollama list
+
+import ollama
+
+prompt = "who are you?"
+
+response = ollama.chat(
+            model = "codellama",
+            messages = [
+                 {"role":"user",
+                  "content":"prompt"}
+          ]
+)
+
+response
+
+print(response['message']['content'])
+
+
+response = ollama.chat(
+    model = "codeguru",
+    messages =[
+        {"role":"user","content":"prompt"}
+    ],
+)
+
+print(response['message']['content'])
