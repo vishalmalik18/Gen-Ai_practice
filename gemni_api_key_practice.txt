@@ -104,6 +104,19 @@ response = model.generate_content(
 print(response.text)
 
 
+response = model.generate_content(
+    contents=[
+        {
+            "role":"user",
+            "parts":[{"text":prompt}]
+        }
+    ],
+    generation_config={
+        'temperature':0.0
+    }
+)
+
+
 
 
 
