@@ -1,0 +1,42 @@
+# !pip install langchain-openai
+
+from langchain_openai import ChatOpenAI
+
+chat_model = ChatOpenAI(
+    api_key="",
+    base_url="",
+    model_name=""
+)
+
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import Field, BaseModel
+
+class QueryResponse(BaseModel):
+  Introduction: str=Field(description="A brief introduction of the topic asked by the user")
+  pros: str = Field(description="2 bullet points showing ther pros of the topic asked by the user")
+  cons: str = Field(description="2 bullet points showing the cons of the topic asked by the user")
+  conclusion: str = Field(description="one line conclusion of the topic asked by the user")
+
+parser = PydanticOutputParser(pydantic_object=QueryResponse)
+
+print(parser.get_format_instructions())
+
+prompt_text = """ Answer the query and generate the response based on the following formatting instructions 
+                  Format Instruction : {format_instructions}
+                  Query:{query}"""
+
+prompt = PromptTemplate(
+    template=prompt_text,
+    input_variables=['query'],
+    partial_variables={"format_instructions":parser.get_format_instructions()}
+)
+
+
+# Lcel
+chain = prompt|chat_model|parser
+
+question = "Explain about Quantum mechanics in 20 words"
+response = chain.invoke({"query":question})
+
+for k,v in response.dict().items():
+  print(f"{k}:\n{v}\n")
