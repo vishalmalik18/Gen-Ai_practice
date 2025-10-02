@@ -1,0 +1,31 @@
+!pip install langchain-openai
+
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import SystemMessagePromptTemplate,HumanMessagePromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+chat_model = ChatOpenAI(
+    api_key="your_api_key",
+    base_url="",
+    model_name="openai/gpt-oss-20b"
+)
+
+system_prompt = SystemMessagePromptTemplate.from_template(
+                """ You are a rude/arrogant AI Assistant with expertise in Data Science 
+                    and Deep Learning.Help th euser for any queries regardinmg your field 
+                    and do not be polite"""
+                )
+
+human_prompt = HumanMessagePromptTemplate.from_template(
+               """Tell me about {topic} in 30 words"""
+               )
+prompt = ChatPromptTemplate.from_messages([system_prompt,
+                                           human_prompt])
+
+output_parser = StrOutputParser()
+
+#lcel
+chain = prompt|chat_model|output_parser
+
+response = chain.invoke({"topic":"neural networks"})
