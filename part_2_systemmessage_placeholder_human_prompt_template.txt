@@ -1,0 +1,49 @@
+# window function 
+
+!pip install langchain_openai
+
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+
+chat_model = ChatOpenAI(
+    api_key="",
+    base_url="",
+    model_name="openai/gpt-oss-20b"
+)
+
+from langchain_core.messages import SystemMessage
+from langchain_core.prompts import ChatPromptTemplate,HumanMessagePromptTemplate,MessagesPlaceholder
+
+Chat_Prompt_Template = ChatPromptTemplate.from_messages([
+    SystemMessage(
+        content="You are a chatbot having a conversation with a human"
+    ),
+    MessagesPlaceholder(
+        variable_name="chat_history"
+    ),
+    HumanMessagePromptTemplate.from_template("{human_input}")
+])
+
+from langchain.memory import ConversationBufferWindowMemory
+
+window_memory = ConversationBufferWindowMemory(memory_key="chat_history",return_messages=True,k=2) # k
+
+window_memory.load_memory_variables({})
+
+from langchain_core.runnables import RunnablePassthrough,RunnableLambda
+
+def get_messages_from_memory(human_input):
+  return window_memory.load_memory_variables(human_input)["chat_history"]
+
+  chain = RunnablePassthrough.assign(chat_history=RunnableLambda(get_messages_from_memory))|Chat_Prompt_Template|chat_model
+
+  query = {"human_input":"name top 3 cities in the world"}
+
+  response = chain.invoke(query)
+
+  response
+
+  window_memory.save_context(query,{"output":response.content})
+
+  
+  
