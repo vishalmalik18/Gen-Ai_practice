@@ -1,0 +1,24 @@
+import google.generativeai as genai
+
+genai.configure(api_key="your_api_key")
+
+response = genai.embed_content(model='gemini-embedding-001',
+                               content="How are you")
+
+response
+
+len(response) -> 1
+
+len(response['embedding']) -> 3072
+
+response = genai.embed_content(model='gemini-embedding-001',
+                               content=["hi ",
+                                        "hello",
+                                        "how are you"])
+
+len(response['embedding']) -> 3
+
+len(response['embedding'][0]),len(response['embedding'][1]),len(response['embedding'][2])
+
+-> (3072, 3072, 3072)
+
